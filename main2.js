@@ -2,27 +2,35 @@ var http = require("http");
 var fs = require("fs");
 var url = require("url");
 
-function createTemplate(title, description) {
+function createTemplate(title, description, list) {
   var template = `
-    <!doctype html>
-    <html>
-    <head>
-      <title>WEB1 - ${title}</title>
-      <meta charset="utf-8">
-    </head>
-    <body>
-      <h1><a href="/">WEB</a></h1>
-      <ol>
-        <li><a href="/?id=html">HTML</a></li>
-        <li><a href="/?id=CSS">CSS</a></li>
-        <li><a href="/?id=JavaScript">JavaScript</a></li>
-      </ol>
-      <h2>${title}</h2>
-      <p>${description}</p>
-    </body>
-    </html>
-  `;
+      <!doctype html>
+      <html>
+      <head>
+        <title>WEB1 - ${title}</title>
+        <meta charset="utf-8">
+      </head>
+      <body>
+        <h1><a href="/">WEB</a></h1>
+        <ol>
+          ${list}
+        </ol>
+        <h2>${title}</h2>
+        <p>${description}</p>
+      </body>
+      </html>
+    `;
   return template;
+}
+
+function createList(filelist) {
+  var list = "";
+
+  filelist.forEach((filename) => {
+    list += `<li><a href="/?id=${filename}">${filename}</a></li>`;
+  });
+
+  return list;
 }
 
 var app = http.createServer(function (request, response) {
@@ -32,18 +40,26 @@ var app = http.createServer(function (request, response) {
 
   if (pathname === "/") {
     if (queryData.id === undefined) {
-      var title = "Welcome";
-      var description = "Hello, Node.js";
-
-      response.writeHead(200);
-      response.end(createTemplate(title, description));
-    } else {
-      fs.readFile(`data/${queryData.id}`, "utf8", function (err, _description) {
-        var title = queryData.id;
-        var description = _description;
+      fs.readdir("./data", function (err, filelist) {
+        var title = "Welcome";
+        var description = "Hello, Node.js";
+        var list = createList(filelist);
+        var template = createTemplate(title, description, list);
 
         response.writeHead(200);
-        response.end(createTemplate(title, description));
+        response.end(template);
+      });
+    } else {
+      fs.readFile(`data/${queryData.id}`, "utf8", function (err, _description) {
+        fs.readdir("./data", function (err, filelist) {
+          var title = queryData.id;
+          var description = _description;
+          var list = createList(filelist);
+          var template = createTemplate(title, description, list);
+
+          response.writeHead(200);
+          response.end(template);
+        });
       });
     }
   } else {
