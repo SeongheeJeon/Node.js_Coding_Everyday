@@ -1,0 +1,25 @@
+{
+  "name": "web2-nodejs",
+  "version": "1.0.0",
+  "description": "유튜브 생활코딩 node.js 강의 실습",
+  "main": "main.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SeongheeJeon/Node.js_Coding_Everyday.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SeongheeJeon/Node.js_Coding_Everyday/issues"
+  },
+  "homepage": "https://github.com/SeongheeJeon/Node.js_Coding_Everyday#readme",
+  "dependencies": {
+    "sanitize-html": "^2.3.2"
+  }
+}
