@@ -36,7 +36,10 @@ var app = http.createServer(function (request, response) {
           var title = queryData.id;
           var sanitizedTitle = sanitizeHtml(title);
           var sanitizedDescription = sanitizeHtml(description, {
-            allowedTags: ["h1"],
+            allowedTags: ["h1", "p", "img"],
+            allowedAttributes: {
+              img: ["src", "width"],
+            },
           });
 
           var list = template.list(filelist);
@@ -152,6 +155,12 @@ var app = http.createServer(function (request, response) {
         response.writeHead(302, { Location: `/` });
         response.end();
       });
+    });
+  } else if (pathname === "/images") {
+    var filteredId = path.parse(queryData.id).base;
+    fs.readFile(`images/${filteredId}`, function (err, img) {
+      response.writeHead(200);
+      response.end(img);
     });
   } else {
     response.writeHead(404);
